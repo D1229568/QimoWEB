@@ -110,7 +110,7 @@
       const response = await fetch('/api/prices?' + params.toString());
       const data = await response.json();
 
-      // Table
+      // Tabl
       tbody.innerHTML = '';
       if (data.length === 0) {
         tbody.innerHTML = '<tr><td colspan="3" style="text-align: center;">No data found</td></tr>';
