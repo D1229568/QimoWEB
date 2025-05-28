@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CPI Price Tracker</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="stylesheets/style.css">
+
+</head>
+<body>
+
+<h1>CPI-Based Price Monitoring for 土雞 (Native Chicken): A Historical Dataset from July 2010 to March 2014</h1>
+
+<div class="search-form">
+  <form id="searchForm">
+    <div class="form-group">
+      <label for="productName">Product Name:</label>
+      <select id="productName" class="form-control">
+        <option value="">Select Product</option>
+        <option value="中區紅羽土雞公上貨">中區紅羽土雞公上貨</option>
+        <option value="中區紅羽土雞母上貨">中區紅羽土雞母上貨</option>
+        <option value="嘉南紅羽土雞公上貨">嘉南紅羽土雞公上貨</option>
+        <option value="嘉南紅羽土雞母上貨">嘉南紅羽土雞母上貨</option>
+        <option value="高屏紅羽土雞公上貨">高屏紅羽土雞公上貨</option>
+        <option value="高屏紅羽土雞母上貨">高屏紅羽土雞母上貨</option>
+        <option value="嘉南紅羽土雞綜貨">嘉南紅羽土雞綜貨</option>
+        <option value="黑羽土雞公舍飼">黑羽土雞公舍飼</option>
+        <option value="黑羽土雞母舍飼">黑羽土雞母舍飼</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="startDate">Start Date:</label>
+      <input type="date" id="startDate" min="2010-07-10" max="2014-03-31" onchange="updateEndDateMin()">
+    </div>
+
+    <div class="form-group">
+      <label for="endDate">End Date:</label>
+      <input type="date" id="endDate" min="2010-07-10" max="2014-03-31">
+    </div>
+
+    <div class="form-group">
+      <label for="price">Price:</label>
+      <input type="number" id="price" placeholder="Enter specific price...">
+    </div>
+
+    <div class="form-group">
+      <label for="limit">Number of records to display (max 11061):</label>
+      <input type="number" id="limit" placeholder="e.g. 50">
+    </div>
+
+    <div class="form-group">
+      <label for="sortOrder">Sort by:</label>
+      <select id="sortOrder" class="form-control">
+        <option value="date_asc">Date Ascending</option>
+        <option value="date_desc">Date Descending</option>
+        <option value="price_asc">Price Ascending</option>
+        <option value="price_desc">Price Descending</option>
+      </select>
+    </div>
+
+    <div class="button-group">
+      <button type="submit">Search</button>
+    </div>
+  </form>
+</div>
+
+<table id="priceTable">
+  <thead>
+  <tr>
+    <th>Date</th>
+    <th>Product Name</th>
+    <th>Price</th>
+  </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<div id="chartWrapper">
+  <canvas id="priceChart" height="80" style="display:none;"></canvas>
+  <p id="chartMessage">Please choose the specific product and select Date Ascending to view the chart</p>
+</div>
+
+<script>
+  async function fetchData() {
+    try {
+      const existingCount = document.querySelector('#resultCount');
+      if (existingCount) existingCount.remove();
+
+      const tbody = document.querySelector('#priceTable tbody');
+      tbody.innerHTML = '<tr><td colspan="3" style="text-align: center;">Loading data...</td></tr>';
+
+      const productName = document.getElementById('productName').value;
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+      const price = document.getElementById('price').value;
+      const limit = document.getElementById('limit').value;
+      const sortOrder = document.getElementById('sortOrder').value;
+
+      const params = new URLSearchParams();
+      if (productName) params.append('name', productName);
+      if (startDate) params.append('startDate', startDate);
+      if (endDate) params.append('endDate', endDate);
+      if (price) params.append('price', price);
+      if (limit) params.append('limit', limit);
+      if (sortOrder) params.append('sort', sortOrder);
+
+      const response = await fetch('/api/prices?' + params.toString());
+      const data = await response.json();
+
+      // Table
+      tbody.innerHTML = '';
+      if (data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align: center;">No data found</td></tr>';
+      } else {
+        data.forEach(item => {
+          const row = tbody.insertRow();
+          row.insertCell().textContent = item.date;
+          row.insertCell().textContent = item.product_name;
+          row.insertCell().textContent = item.price;
+        });
+      }
+
+      const resultCount = document.createElement('p');
+      resultCount.id = 'resultCount';
+      resultCount.textContent = `Showing ${data.length} records`;
+      resultCount.style.marginTop = '10px';
+      tbody.parentNode.insertAdjacentElement('afterend', resultCount);
+
+      // Chart logic
+      const chartCanvas = document.getElementById('priceChart');
+      const chartMessage = document.getElementById('chartMessage');
+
+      const shouldShowChart = productName && sortOrder === 'date_asc';
+
+      if (!shouldShowChart) {
+        chartCanvas.style.display = 'none';
+        chartMessage.style.display = 'block';
+        if (window.priceChart instanceof Chart) {
+          window.priceChart.destroy();
+        }
+        return;
+      }
+
+      chartMessage.style.display = 'none';
+      chartCanvas.style.display = 'block';
+
+      const ctx = chartCanvas.getContext('2d');
+      const labels = data.map(item => item.date);
+      const prices = data.map(item => item.price);
+
+      if (window.priceChart instanceof Chart) {
+        window.priceChart.destroy();
+      }
+
+      window.priceChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: `Price Trend - ${productName}`,
+            data: prices,
+            fill: false,
+            borderColor: '#3498db',
+            tension: 0.1
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: { title: { display: true, text: 'Date' } },
+            y: { title: { display: true, text: 'Price' }, beginAtZero: false }
+          }
+        }
+      });
+
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      const tbody = document.querySelector('#priceTable tbody');
+      tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: red;">${error.message || 'Error loading data. Please try again.'}</td></tr>`;
+    }
+  }
+
+  function showCustomAlert(message) {
+    // Remove existing alert if any
+    const oldAlert = document.getElementById('customAlertBox');
+    if (oldAlert) oldAlert.remove();
+
+    const alertBox = document.createElement('div');
+    alertBox.id = 'customAlertBox';
+    alertBox.textContent = message;
+    alertBox.style.position = 'fixed';
+    alertBox.style.top = '30px';
+    alertBox.style.left = '50%';
+    alertBox.style.transform = 'translateX(-50%)';
+    alertBox.style.background = '#e74c3c';
+    alertBox.style.color = 'white';
+    alertBox.style.padding = '16px 32px';
+    alertBox.style.borderRadius = '8px';
+    alertBox.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+    alertBox.style.zIndex = '9999';
+    alertBox.style.fontWeight = 'bold';
+    document.body.appendChild(alertBox);
+    setTimeout(() => {
+      alertBox.remove();
+    }, 2500);
+  }
+
+  function updateEndDateMin() {
+    const startDate = document.getElementById('startDate').value;
+    const endDateInput = document.getElementById('endDate');
+
+    if (startDate) {
+      endDateInput.min = startDate;
+      // If end date is less than start date, clear it
+      if (endDateInput.value && endDateInput.value < startDate) {
+        endDateInput.value = '';
+        showCustomAlert('End Date cannot be smaller than Start Date');
+      }
+    } else {
+      endDateInput.min = '2010-07-10';
+    }
+  }
+
+  // Add date input event listeners for real-time validation
+  document.getElementById('startDate').addEventListener('change', function(e) {
+    const date = e.target.value;
+    if (date && (date < '2010-07-10' || date > '2014-03-31')) {
+      showCustomAlert('Start Date harus antara 10 Juli 2010 dan 31 Maret 2014');
+      e.target.value = '';
+    }
+    updateEndDateMin();
+  });
+
+  document.getElementById('endDate').addEventListener('change', function(e) {
+    const date = e.target.value;
+    const startDate = document.getElementById('startDate').value;
+
+    if (date && (date < '2010-07-10' || date > '2014-03-31')) {
+      showCustomAlert('End Date harus antara 10 Juli 2010 dan 31 Maret 2014');
+      e.target.value = '';
+      return;
+    }
+
+    if (date && startDate && date < startDate) {
+      showCustomAlert('End Date tidak boleh lebih kecil dari Start Date');
+      e.target.value = '';
+    }
+  });
+
+  // Add event listener for form submission
+  document.getElementById('searchForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const productName = document.getElementById('productName').value.trim();
+    const startDate = document.getElementById('startDate').value.trim();
+    const endDate = document.getElementById('endDate').value.trim();
+    const price = document.getElementById('price').value.trim();
+    const limit = document.getElementById('limit').value.trim();
+    if (limit && (!/^\d+$/.test(limit) || parseInt(limit) > 11061) || parseInt(limit) < 1) {
+      showCustomAlert('The minimum limit is 1 and the maximum limit is 11061 records. Please enter a valid number.');
+      return;
+    }
+
+
+    if (!productName && !startDate && !endDate && !price && !limit) {
+      showCustomAlert('Please enter at least one search criterion.');
+      return;
+    }
+    fetchData();
+  });
+</script>
+
+</body>
+</html>
