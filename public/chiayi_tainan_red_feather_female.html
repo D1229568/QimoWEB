@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chiayi-Tainan Red Feather Native Chicken (Female) | Price Analytics</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/luxon@3.0.1/build/global/luxon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.2.0/dist/chartjs-adapter-luxon.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="stylesheets/product-charts.css">
+  <script src="javascripts/product-charts.js"></script>
+  <link rel="stylesheet" href="stylesheets/navbar.css">
+  <script src="javascripts/navbar-effects.js"></script>
+</head>
+<body>
+
+<div class="header">
+  <h1>Chiayi-Tainan Red Feather Native Chicken (Female)</h1>
+  <p class="product-subtitle">Price Analysis Dashboard (2010-2014)</p>
+</div>
+
+<nav class="navbar">
+  <div class="navbar-menu">
+    <a href="index.html">Home</a>
+    <a href="chart.html">Products Overview</a>
+    <a href="central_red_feather_male.html">Central Red Feather (Male)</a>
+    <a href="central_red_feather_female.html">Central Red Feather (Female)</a>
+    <a href="chiayi_tainan_red_feather_male.html">Chiayi-Tainan Red Feather (Male)</a>
+    <a href="chiayi_tainan_red_feather_female.html" class="active">Chiayi-Tainan Red Feather (Female)</a>
+    <a href="kaohsiung_pingtung_red_feather_male.html">Kaohsiung-Pingtung Red Feather (Male)</a>
+    <a href="kaohsiung_pingtung_red_feather_female.html">Kaohsiung-Pingtung Red Feather (Female)</a>
+    <a href="chiayi_tainan_red_feather_mix.html">Chiayi-Tainan Red Feather (Mix)</a>
+    <a href="black_feather_male.html">Black Feather (Male)</a>
+    <a href="black_feather_female.html">Black Feather (Female)</a>
+  </div>
+</nav>
+
+<!-- Hidden input for JavaScript to know which product to load -->
+<input type="hidden" id="productName" value="嘉南紅羽土雞母上貨">
+
+<div class="container">
+  <div class="overview-card">
+    <h2>Product Overview</h2>
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="stat-label">Average Price</span>
+        <span class="stat-value" id="avgPrice">-</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Price Range</span>
+        <span class="stat-value" id="priceRange">-</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Price Volatility</span>
+        <span class="stat-value" id="volatility">-</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Data Points</span>
+        <span class="stat-value" id="dataPointCount">-</span>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3 class="chart-title">Price Trend (2010-2014)</h3>
+      </div>
+      <canvas id="mainTrendChart" class="medium-chart-canvas"></canvas>
+    </div>
+  </div>
+
+  <h3 class="section-title">Price Analysis by Year</h3>
+  <div id="yearly-charts-container" class="small-charts-grid">
+    <!-- Year charts will be dynamically inserted here -->
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-header">
+      <h3 class="chart-title">Year-on-Year Comparison</h3>
+    </div>
+    <canvas id="yearlyComparison" class="tiny-chart-canvas"></canvas>
+  </div>
+
+  <h3 class="section-title">Seasonal Analysis</h3>
+  <div class="small-charts-grid">
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3 class="chart-title">Monthly Price Distribution</h3>
+      </div>
+      <canvas id="monthlyDistribution" class="tiny-chart-canvas"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3 class="chart-title">Quarterly Trends</h3>
+      </div>
+      <canvas id="quarterlyTrends" class="tiny-chart-canvas"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3 class="chart-title">Seasonal Patterns</h3>
+      </div>
+      <canvas id="seasonalPatterns" class="tiny-chart-canvas"></canvas>
+    </div>
+  </div>
+
+  <h3 class="section-title">Comparative Analysis</h3>
+  <div class="small-charts-grid">
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3 class="chart-title">Female vs Male (Chiayi-Tainan)</h3>
+      </div>
+      <canvas id="centralGenderComparison" class="tiny-chart-canvas"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3 class="chart-title">Regional Female Comparison</h3>
+      </div>
+      <canvas id="regionalFemaleComparison" class="tiny-chart-canvas"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3 class="chart-title">vs Market Average</h3>
+      </div>
+      <canvas id="marketComparison" class="tiny-chart-canvas"></canvas>
+    </div>
+  </div>
+
+  <h3 class="section-title">Advanced Analytics</h3>
+  <div class="large-charts-grid">
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3 class="chart-title">Price Distribution Histogram</h3>
+      </div>
+      <canvas id="priceDistribution" class="medium-chart-canvas"></canvas>
+    </div>
+  </div>
+
+  <h3 class="section-title">Market Insights</h3>
+  <div class="insight-card">
+    <h3 class="insight-title">Price Volatility Analysis</h3>
+    <div class="insight-content" id="volatilityInsight">
+      Loading insights...
+    </div>
+  </div>
+
+  <div class="insight-card">
+    <h3 class="insight-title">Seasonal Patterns</h3>
+    <div class="insight-content" id="seasonalInsight">
+      Loading insights...
+    </div>
+  </div>
+
+  <div class="insight-card">
+    <h3 class="insight-title">Market Position</h3>
+    <div class="insight-content" id="marketPositionInsight">
+      Loading insights...
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>CPI Price Analysis Dashboard &copy; 2025 | Chiayi-Tainan Red Feather Native Chicken (Female)</p>
+</div>
+
+</body>
+</html>

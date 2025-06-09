@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CPI Price Analytics | Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="stylesheets/style.css">
+  <link rel="stylesheet" href="stylesheets/navbar.css">
+  <script src="javascripts/navbar-effects.js"></script>
+  <style>
+    :root {
+      --primary-color: #4dabf7;
+      --secondary-color: #74c0fc;
+      --accent-color: #339af0;
+      --background-light: #e7f5ff;
+      --panel-color: #ffffff;
+      --text-dark: #2c3e50;
+      --text-light: #7f8c8d;
+      --success: #20bf6b;
+      --warning: #f39c12;
+      --danger: #e74c3c;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--background-light);
+      padding: 0;
+      margin: 0;
+      color: var(--text-dark);
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 2rem;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0;
+      padding: 0;
+      font-weight: 300;
+      font-size: 2.2rem;
+      color: white;
+    }
+
+    .header p {
+      margin: 10px 0 0;
+      opacity: 0.9;
+      font-size: 1rem;
+    }
+
+    .login-container {
+      max-width: 450px;
+      margin: 80px auto;
+      padding: 30px;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(76, 201, 240, 0.2);
+      border: 1px solid #a5d8ff;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .login-header h2 {
+      color: #1c7ed6;
+      margin-bottom: 10px;
+    }
+
+    .login-header p {
+      color: #4c9af0;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    .login-form .form-group {
+      margin-bottom: 20px;
+    }
+
+    .login-form .input-group {
+      position: relative;
+    }
+
+    .login-form .input-group i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #4dabf7;
+    }
+
+    .login-form input {
+      width: 100%;
+      padding: 12px 15px 12px 45px;
+      border: 1px solid #a5d8ff;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 14px;
+      background-color: #f8fdff;
+      transition: all 0.3s ease;
+    }
+
+    .login-form input:focus {
+      border-color: #4dabf7;
+      box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.2);
+      outline: none;
+    }
+
+    .login-form button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(to right, #1c7ed6, #4dabf7);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .login-form button:hover {
+      background: linear-gradient(to right, #1971c2, #3b95e0);
+      box-shadow: 0 4px 8px rgba(77, 171, 247, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .login-footer {
+      text-align: center;
+      margin-top: 25px;
+      color: #0c4a6e;
+      font-size: 14px;
+    }
+
+    .login-footer a {
+      color: #1c7ed6;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .login-footer a:hover {
+      text-decoration: underline;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .remember-me input {
+      width: auto;
+      margin-right: 8px;
+    }
+
+    .remember-me label {
+      color: #0c4a6e;
+      font-size: 14px;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 25px 0;
+    }
+
+    .divider:before,
+    .divider:after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #d0ebff;
+    }
+
+    .divider span {
+      padding: 0 15px;
+      color: #4c9af0;
+      font-size: 14px;
+    }
+
+    .login-options {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+      gap: 15px;
+    }
+
+    .login-option {
+      flex: 1;
+      padding: 15px;
+      text-align: center;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid #d0ebff;
+      color: #1c7ed6;
+      font-weight: 500;
+    }
+
+    .login-option.active {
+      border-color: #4dabf7;
+      background-color: #f0f9ff;
+      box-shadow: 0 2px 8px rgba(77, 171, 247, 0.15);
+    }
+
+    .login-option i {
+      font-size: 24px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .login-option.owner {
+      border-color: #1c7ed6;
+    }
+
+    .login-option.guest {
+      border-color: #74c0fc;
+    }
+
+    .login-option:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    #guest-login-section, #owner-login-section {
+      display: none;
+    }
+
+    .active-section {
+      display: block !important;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .guest-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(to right, #74c0fc, #a5d8ff);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .guest-btn:hover {
+      background: linear-gradient(to right, #3b95e0, #89cbff);
+      box-shadow: 0 4px 8px rgba(77, 171, 247, 0.3);
+      transform: translateY(-2px);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive Adjustments */
+    @media screen and (max-width: 768px) {
+      .login-container {
+        margin: 40px 20px;
+        padding: 25px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>CPI Price Analytics</h1>
+  <p>Advanced data visualization for Native Chicken price trends (2010-2014)</p>
+</div>
+
+<div class="login-container">
+  <div class="login-header">
+    <h2>Welcome to CPI Price Analytics</h2>
+    <p>Please select your login method</p>
+  </div>
+
+  <div class="login-options">
+    <div class="login-option owner" id="owner-option">
+      <i class="fas fa-user-shield"></i>
+      Owner Login
+    </div>
+    <div class="login-option guest" id="guest-option">
+      <i class="fas fa-user"></i>
+      Guest Login
+    </div>
+  </div>
+
+  <!-- Owner Login Section -->
+  <div id="owner-login-section">
+    <div class="login-form">
+      <div class="form-group">
+        <div class="input-group">
+          <i class="fas fa-user"></i>
+          <input type="text" id="username" placeholder="Owner Username" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-group">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="password" placeholder="Password" required>
+        </div>
+      </div>
+
+      <div class="remember-me">
+        <input type="checkbox" id="remember">
+        <label for="remember">Remember me</label>
+      </div>
+
+      <button type="submit" id="owner-login-btn">Login as Owner</button>
+    </div>
+  </div>
+
+  <!-- Guest Login Section -->
+  <div id="guest-login-section">
+    <div class="login-form">
+      <div class="form-group">
+        <div class="input-group">
+          <i class="fas fa-user-circle"></i>
+          <input type="text" id="guest-name" placeholder="Your Name (Optional)">
+        </div>
+      </div>
+
+      <button type="submit" id="guest-login-btn" class="guest-btn">Continue as Guest</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const ownerOption = document.getElementById('owner-option');
+    const guestOption = document.getElementById('guest-option');
+    const ownerSection = document.getElementById('owner-login-section');
+    const guestSection = document.getElementById('guest-login-section');
+    const ownerLoginBtn = document.getElementById('owner-login-btn');
+    const guestLoginBtn = document.getElementById('guest-login-btn');
+
+    // Initially show owner login
+    ownerOption.classList.add('active');
+    ownerSection.classList.add('active-section');
+
+    // Toggle between login options
+    ownerOption.addEventListener('click', function() {
+      ownerOption.classList.add('active');
+      guestOption.classList.remove('active');
+      ownerSection.classList.add('active-section');
+      guestSection.classList.remove('active-section');
+    });
+
+    guestOption.addEventListener('click', function() {
+      guestOption.classList.add('active');
+      ownerOption.classList.remove('active');
+      guestSection.classList.add('active-section');
+      ownerSection.classList.remove('active-section');
+    });
+
+    // Owner login handler
+    ownerLoginBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      if (!username || !password) {
+        alert('Please enter both username and password');
+        return;
+      }
+
+      // Call the authentication API
+      console.log('Sending owner login request for:', username);
+
+      fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password, type: 'owner' }),
+        credentials: 'same-origin' // Include credentials in the request
+      })
+      .then(response => {
+        console.log('Login response status:', response.status);
+        if (!response.ok) {
+          return response.json().then(errorData => {
+            console.error('Server error:', errorData);
+            throw new Error(errorData.message || 'Server error');
+          });
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Login response data:', data);
+        if (data.success) {
+          // Store user info in localStorage
+          localStorage.setItem('username', username);
+          localStorage.setItem('userType', 'owner');
+          localStorage.setItem('isOnline', 'on');
+
+          console.log('Login successful, redirecting...');
+          window.location.href = 'index.html'; // Redirect to index.html
+        } else {
+          alert('Invalid username or password');
+        }
+      })
+      .catch(error => {
+        console.error('Error during login:', error);
+        alert('Login failed. Please try again.');
+      });
+    });
+
+    // Guest login handler
+    guestLoginBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const guestName = document.getElementById('guest-name').value || 'Guest';
+
+      console.log('Sending guest login request for:', guestName);
+
+      fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: guestName,
+          password: 'guest', // Guest password is fixed as 'guest'
+          type: 'guest'
+        }),
+        credentials: 'same-origin'
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(errorData => {
+            throw new Error(errorData.message || 'Server error');
+          });
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.success) {
+          // Store guest info
+          localStorage.setItem('username', guestName);
+          localStorage.setItem('userType', 'guest');
+
+          console.log('Guest login successful, redirecting...');
+          window.location.href = 'index.html';
+        } else {
+          alert('Guest login failed');
+        }
+      })
+      .catch(error => {
+        console.error('Error during guest login:', error);
+        alert('Guest login failed. Please try again.');
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

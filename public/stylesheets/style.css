@@ -1,14 +1,14 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f0f4f8;
+  background-color: #e7f5ff;
   padding: 30px;
   margin: 0;
-  color: #333;
+  color: #0c4a6e;
 }
 
 h1 {
   text-align: center;
-  color: #2c3e50;
+  color: #1c7ed6;
   margin-bottom: 30px;
 }
 
@@ -18,7 +18,8 @@ h1 {
   padding: 25px;
   background-color: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(76, 201, 240, 0.1);
+  border: 1px solid #a5d8ff;
 }
 
 .form-group {
@@ -29,33 +30,32 @@ h1 {
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
-  color: #34495e;
+  color: #1c7ed6;
 }
 
 .form-group input,
 select.form-control {
   width: 100%;
   padding: 10px;
-  border: 1px solid #dcdfe6;
+  border: 1px solid #a5d8ff;
   border-radius: 8px;
   box-sizing: border-box;
   font-size: 14px;
+  background-color: #f8fdff;
 }
 
 button {
-  background-color: #3498db;
+  background-color: #4dabf7;
   color: white;
   padding: 12px 24px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
-  font-size: 14px;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s;
 }
 
 button:hover {
-  background-color: #2980b9;
+  background-color: #377dff;
 }
 
 .button-group {
@@ -66,33 +66,73 @@ button:hover {
 
 table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   background-color: #ffffff;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 15px rgba(76, 201, 240, 0.15);
+  margin-bottom: 30px;
+  border: 1px solid #a5d8ff;
 }
 
 th, td {
   padding: 14px 16px;
   text-align: left;
-  border-bottom: 1px solid #ecf0f1;
+  border-bottom: 1px solid #d0ebff;
 }
 
 th {
-  background-color: #ecf0f1;
-  font-weight: bold;
-  color: #2c3e50;
+  background: #4dabf7;
+  font-weight: 600;
+  color: #ffffff;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.5px;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f0f9ff;
 }
 
 tbody tr:hover {
-  background-color: #f9f9f9;
+  background-color: #e7f5ff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+tbody td {
+  color: #0c4a6e;
+  transition: all 0.2s ease;
+}
+
+/* Tambahkan animasi untuk baris tabel */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+tbody tr {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Styling untuk kolom tanggal dan harga */
+tbody td:first-child {
+  font-weight: 500;
+  color: #1971c2;
+}
+
+tbody td:last-child {
+  font-weight: 600;
+  color: #0c4a6e;
 }
 
 #resultCount {
   text-align: right;
   font-style: italic;
-  color: #555;
+  color: #4c9af0;
+  margin-bottom: 10px;
+  font-size: 14px;
 }
 
 #chartWrapper {

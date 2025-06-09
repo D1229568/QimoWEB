@@ -6,6 +6,8 @@ const sqlite3 = require('sqlite3').verbose();
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var authRouter = require('./routes/auth');
+var testRouter = require('./routes/test');
 
 var app = express();
 
@@ -35,10 +37,61 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
+// Middleware to check if owner is online and redirect to maintenance page
+// Skip for login page and maintenance page itself
+app.use((req, res, next) => {
+    // Skip this middleware for API routes, login page, maintenance page, and static assets
+    if (req.path === '/login' ||
+        req.path === '/logout' ||
+        req.path === '/login.html' ||
+        req.path === '/maintenance.html' ||
+        req.path.startsWith('/stylesheets/') ||
+        req.path.startsWith('/javascripts/') ||
+        req.path.startsWith('/images/') ||
+        req.path.startsWith('/api/')) {
+        return next();
+    }
+
+    // Check if we have a logged-in user via cookie
+    const username = req.cookies.username;
+
+    // If no username in cookie, redirect to login page
+    if (!username) {
+        console.log('No login detected, redirecting to login page');
+        return res.redirect('/login.html');
+    }
+
+    // If the user is the owner (kenji1), let them access everything
+    if (username === 'kenji1') {
+        return next();
+    }
+
+    // Check if owner is online
+    db.get('SELECT isOnline FROM users WHERE username = ?', ['kenji1'], (err, user) => {
+        if (err) {
+            console.error('Error checking owner status:', err);
+            return next(); // Continue in case of error
+        }
+
+        // If owner is online and current user is not the owner, redirect to maintenance
+        if (user && user.isOnline === 'on' && username !== 'kenji1') {
+            console.log('Owner is online, redirecting user to maintenance page');
+            return res.redirect('/maintenance.html');
+        }
+
+        // Otherwise, continue normally
+        next();
+    });
+});
+
+// Routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/', authRouter);  // Add auth router that handles /login
+app.use('/test', testRouter); // Add test router for /test endpoint
+
+// Static file middleware comes AFTER routes
+app.use(express.static(path.join(__dirname, 'public')));
 
 module.exports = app;
-

@@ -7,83 +7,420 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <link rel="stylesheet" href="stylesheets/style.css">
+  <link rel="stylesheet" href="stylesheets/product-charts.css">
+  <link rel="stylesheet" href="stylesheets/navbar.css">
+  <script src="javascripts/navbar-effects.js"></script>
+
+  <style>
+    :root {
+      --primary-color: #4dabf7;
+      --secondary-color: #74c0fc;
+      --accent-color: #339af0;
+      --background-light: #e7f5ff;
+      --panel-color: #ffffff;
+      --text-dark: #2c3e50;
+      --text-light: #7f8c8d;
+      --success: #20bf6b;
+      --warning: #f39c12;
+      --danger: #e74c3c;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--background-light);
+      padding: 0;
+      margin: 0;
+      color: var(--text-dark);
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 2rem;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0;
+      padding: 0;
+      font-weight: 300;
+      font-size: 2.2rem;
+      color: white;
+    }
+
+    .header p {
+      margin: 10px 0 0;
+      opacity: 0.9;
+      font-size: 1rem;
+    }
+
+    /* Removing inline navbar styles to use navbar.css consistently */
+
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .search-form {
+      background-color: var(--panel-color);
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .form-group input,
+    select.form-control {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #e1e5eb;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 14px;
+      transition: border-color 0.3s;
+    }
+
+    .form-group input:focus,
+    select.form-control:focus {
+      border-color: var(--accent-color);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(84, 160, 255, 0.15);
+    }
+
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: var(--secondary-color);
+      box-shadow: 0 4px 8px rgba(46, 134, 222, 0.2);
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .view-analytics {
+      background-color: transparent;
+      color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+      padding: 10px 16px;
+    }
+
+    .view-analytics:hover {
+      background-color: rgba(46, 134, 222, 0.1);
+      box-shadow: none;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: var(--panel-color);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    th, td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid #ecf0f1;
+    }
+
+    th {
+      background-color: #f8f9fa;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    tbody tr:hover {
+      background-color: #f9f9f9;
+    }
+
+    #resultCount {
+      text-align: right;
+      font-style: italic;
+      color: var(--text-light);
+      margin-top: 10px;
+    }
+
+    #chartWrapper {
+      margin-top: 40px;
+      background-color: var(--panel-color);
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    #chartMessage {
+      text-align: center;
+      color: var(--text-light);
+      font-style: italic;
+      padding: 20px 0;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .chart-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin: 0;
+    }
+
+    .footer {
+      background-color: var(--panel-color);
+      text-align: center;
+      padding: 20px;
+      margin-top: 50px;
+      color: var(--text-light);
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .button-group {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+  </style>
 
 </head>
 <body>
 
-<h1>CPI-Based Price Monitoring for 土雞 (Native Chicken): A Historical Dataset from July 2010 to March 2014</h1>
-
-<div class="search-form">
-  <form id="searchForm">
-    <div class="form-group">
-      <label for="productName">Product Name:</label>
-      <select id="productName" class="form-control">
-        <option value="">Select Product</option>
-        <option value="中區紅羽土雞公上貨">中區紅羽土雞公上貨</option>
-        <option value="中區紅羽土雞母上貨">中區紅羽土雞母上貨</option>
-        <option value="嘉南紅羽土雞公上貨">嘉南紅羽土雞公上貨</option>
-        <option value="嘉南紅羽土雞母上貨">嘉南紅羽土雞母上貨</option>
-        <option value="高屏紅羽土雞公上貨">高屏紅羽土雞公上貨</option>
-        <option value="高屏紅羽土雞母上貨">高屏紅羽土雞母上貨</option>
-        <option value="嘉南紅羽土雞綜貨">嘉南紅羽土雞綜貨</option>
-        <option value="黑羽土雞公舍飼">黑羽土雞公舍飼</option>
-        <option value="黑羽土雞母舍飼">黑羽土雞母舍飼</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label for="startDate">Start Date:</label>
-      <input type="date" id="startDate" min="2010-07-10" max="2014-03-31" onchange="updateEndDateMin()">
-    </div>
-
-    <div class="form-group">
-      <label for="endDate">End Date:</label>
-      <input type="date" id="endDate" min="2010-07-10" max="2014-03-31">
-    </div>
-
-    <div class="form-group">
-      <label for="price">Price:</label>
-      <input type="number" id="price" placeholder="Enter specific price...">
-    </div>
-
-    <div class="form-group">
-      <label for="limit">Number of records to display (max 11061):</label>
-      <input type="number" id="limit" placeholder="e.g. 50">
-    </div>
-
-    <div class="form-group">
-      <label for="sortOrder">Sort by:</label>
-      <select id="sortOrder" class="form-control">
-        <option value="date_asc">Date Ascending</option>
-        <option value="date_desc">Date Descending</option>
-        <option value="price_asc">Price Ascending</option>
-        <option value="price_desc">Price Descending</option>
-      </select>
-    </div>
-
-    <div class="button-group">
-      <button type="submit">Search</button>
-    </div>
-  </form>
+<div class="header">
+  <h1>CPI Price Analytics Dashboard</h1>
+  <p>Historical Price Analysis of Native Chicken Products (2010-2014)</p>
 </div>
 
-<table id="priceTable">
-  <thead>
-  <tr>
-    <th>Date</th>
-    <th>Product Name</th>
-    <th>Price</th>
-  </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+<nav class="navbar">
+  <div class="navbar-menu">
+    <a href="index.html" class="active">Home</a>
+    <a href="chart.html">Products Overview</a>
+    <a href="input.html" id="inputLink" style="display:none;">Input Record</a>
+    <a href="#" id="logoutLink" style="display:none;" onclick="handleLogout(); return false;">Logout</a>
+  </div>
+</nav>
 
-<div id="chartWrapper">
-  <canvas id="priceChart" height="80" style="display:none;"></canvas>
-  <p id="chartMessage">Please choose the specific product and select Date Ascending to view the chart</p>
+<div class="container">
+  <div class="search-form">
+    <form id="searchForm">
+      <div class="form-group">
+        <label for="productName">Product Name:</label>
+        <select id="productName" class="form-control">
+          <option value="">Select Product</option>
+          <option value="中區紅羽土雞公上貨">中區紅羽土雞公上貨</option>
+          <option value="中區紅羽土雞母上貨">中區紅羽土雞母上貨</option>
+          <option value="嘉南紅羽土雞公上貨">嘉南紅羽土雞公上貨</option>
+          <option value="嘉南紅羽土雞母上貨">嘉南紅羽土雞母上貨</option>
+          <option value="高屏紅羽土雞公上貨">高屏紅羽土雞公上貨</option>
+          <option value="高屏紅羽土雞母上貨">高屏紅羽土雞母上貨</option>
+          <option value="嘉南紅羽土雞綜貨">嘉南紅羽土雞綜貨</option>
+          <option value="黑羽土雞公舍飼">黑羽土雞公舍飼</option>
+          <option value="黑羽土雞母舍飼">黑羽土雞母舍飼</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" min="2010-07-10"  onchange="updateEndDateMin()">
+      </div>
+
+      <div class="form-group">
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" min="2010-07-10" onchange="updateEndDateMin()">
+      </div>
+
+      <div class="form-group">
+        <label for="price">Price:</label>
+        <input type="number" id="price" placeholder="Enter specific price...">
+      </div>
+
+      <div class="form-group">
+        <label for="limit">Number of records to display (max 11061):</label>
+        <input type="number" id="limit" placeholder="e.g. 50">
+      </div>
+
+      <div class="form-group">
+        <label for="sortOrder">Sort by:</label>
+        <select id="sortOrder" class="form-control">
+          <option value="date_asc">Date Ascending</option>
+          <option value="date_desc">Date Descending</option>
+          <option value="price_asc">Price Ascending</option>
+          <option value="price_desc">Price Descending</option>
+        </select>
+      </div>
+
+      <div class="button-group">
+        <button type="submit">Search Data</button>
+      </div>
+    </form>
+  </div>
+
+  <table id="priceTable">
+    <thead>
+    <tr>
+      <th>Date</th>
+      <th>Product Name</th>
+      <th>Price</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div id="chartWrapper">
+    <div class="chart-header">
+      <h3 class="chart-title">Price Trend Visualization</h3>
+      <a href="chart.html" class="view-analytics">View Advanced Charts</a>
+    </div>
+    <canvas id="priceChart" height="300" style="display:none;"></canvas>
+    <p id="chartMessage">Please choose a specific product and select Date Ascending to view the price trend</p>
+  </div>
+</div>
+
+<div class="footer">
+  <p>CPI Price Tracker &copy; 2025 | Data source: Historical CPI Dataset 2010-2014</p>
 </div>
 
 <script>
+  // Check user login status when page loads
+  window.addEventListener('DOMContentLoaded', () => {
+    checkLoginStatus();
+
+    if (!document.getElementById('startDate').value) {
+      const today = new Date();
+      const defaultEndDate = today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+      const defaultStartDate = '2013-10-01';
+      document.getElementById('startDate').value = defaultStartDate;
+      document.getElementById('endDate').value = defaultEndDate;
+    }
+
+    // Auto-refresh: Check URL parameters for auto-search
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('autoRefresh')) {
+      // Fill form with the URL parameters
+      if (urlParams.has('name')) {
+        document.getElementById('productName').value = urlParams.get('name');
+      }
+      if (urlParams.has('startDate')) {
+        document.getElementById('startDate').value = urlParams.get('startDate');
+      }
+      if (urlParams.has('endDate')) {
+        document.getElementById('endDate').value = urlParams.get('endDate');
+      }
+      if (urlParams.has('price')) {
+        document.getElementById('price').value = urlParams.get('price');
+      }
+      if (urlParams.has('sort')) {
+        document.getElementById('sortOrder').value = urlParams.get('sort');
+      }
+
+      // Execute search automatically
+      fetchData();
+
+      // Display a notification
+      showCustomAlert('Data updated successfully! Showing the latest records.');
+
+      // Remove the autoRefresh parameter to prevent auto-search on page refresh
+      urlParams.delete('autoRefresh');
+      const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+      window.history.replaceState({}, '', newUrl);
+    }
+  });
+
+  // Function to check login status and show/hide logout link
+  function checkLoginStatus() {
+    const username = localStorage.getItem('username');
+    const isOnline = localStorage.getItem('isOnline');
+
+    if (username === 'kenji1' && isOnline === 'on') {
+      document.getElementById('logoutLink').style.display = 'inline-block';
+      document.getElementById('inputLink').style.display = 'inline-block'; // Show Input Record link
+    } else {
+      document.getElementById('logoutLink').style.display = 'none';
+      document.getElementById('inputLink').style.display = 'none'; // Hide Input Record link
+    }
+  }
+
+  // Function to handle logout
+  async function handleLogout() {
+    try {
+      const username = localStorage.getItem('username');
+      console.log('Attempting to logout user:', username);
+
+      if (!username) {
+        console.error('No username found in localStorage');
+        alert('No active user session found');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      const response = await fetch('/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username }),
+      });
+
+      console.log('Logout response status:', response.status);
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Logout response data:', data);
+
+        localStorage.removeItem('username');
+        localStorage.removeItem('isOnline');
+        alert('Successfully logged out');
+        window.location.href = 'login.html';
+      } else {
+        console.error('Logout failed with status:', response.status);
+        // Even if the server request fails, we should clear the local session
+        localStorage.removeItem('username');
+        localStorage.removeItem('isOnline');
+        alert('Logout processing encountered an issue, but your local session has been cleared');
+        window.location.href = 'login.html';
+      }
+    } catch (error) {
+      console.error('Error during logout:', error);
+      // Even if there's an error, clear the local session
+      localStorage.removeItem('username');
+      localStorage.removeItem('isOnline');
+      alert('Error during logout, but your local session has been cleared');
+      window.location.href = 'login.html';
+    }
+  }
+
   async function fetchData() {
     try {
       const existingCount = document.querySelector('#resultCount');
@@ -110,16 +447,51 @@
       const response = await fetch('/api/prices?' + params.toString());
       const data = await response.json();
 
-      // Tabl
+      // Check if user is owner for delete button visibility
+      const username = localStorage.getItem('username');
+      const isOwner = username === 'kenji1'; // Assuming kenji1 is the owner
+
+      // Update table header to include delete column if user is owner
+      const thead = document.querySelector('#priceTable thead tr');
+      if (isOwner && thead.children.length === 3) {
+        const actionHeader = document.createElement('th');
+        actionHeader.textContent = 'Action';
+        actionHeader.style.width = '60px';
+        thead.appendChild(actionHeader);
+      } else if (!isOwner && thead.children.length > 3) {
+        // Remove action column if user is not owner
+        thead.removeChild(thead.lastChild);
+      }
+
+      // Table
       tbody.innerHTML = '';
       if (data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="3" style="text-align: center;">No data found</td></tr>';
+        const colSpan = isOwner ? 4 : 3;
+        tbody.innerHTML = `<tr><td colspan="${colSpan}" style="text-align: center;">No data found</td></tr>`;
       } else {
         data.forEach(item => {
           const row = tbody.insertRow();
           row.insertCell().textContent = item.date;
           row.insertCell().textContent = item.product_name;
           row.insertCell().textContent = item.price;
+
+          // Add delete button for owner
+          if (isOwner) {
+            const actionCell = row.insertCell();
+            const deleteButton = document.createElement('button');
+            deleteButton.innerHTML = '&times;'; // X symbol
+            deleteButton.className = 'delete-btn';
+            deleteButton.title = 'Delete record';
+            deleteButton.style.padding = '2px 6px';
+            deleteButton.style.backgroundColor = '#e74c3c';
+            deleteButton.style.color = 'white';
+            deleteButton.style.border = 'none';
+            deleteButton.style.borderRadius = '4px';
+            deleteButton.style.cursor = 'pointer';
+
+            deleteButton.addEventListener('click', () => deleteRecord(item.id));
+            actionCell.appendChild(deleteButton);
+          }
         });
       }
 
@@ -162,20 +534,35 @@
           datasets: [{
             label: `Price Trend - ${productName}`,
             data: prices,
-            fill: false,
-            borderColor: '#3498db',
-            tension: 0.1
+            fill: true,
+            backgroundColor: 'rgba(46, 134, 222, 0.1)',
+            borderColor: '#2e86de',
+            tension: 0.3,
+            pointRadius: 0,
+            pointHitRadius: 10
           }]
         },
         options: {
           responsive: true,
           scales: {
-            x: { title: { display: true, text: 'Date' } },
-            y: { title: { display: true, text: 'Price' }, beginAtZero: false }
+            x: {
+              title: { display: true, text: 'Date' },
+              grid: { display: false },
+              ticks: { maxTicksLimit: 10 }
+            },
+            y: {
+              title: { display: true, text: 'Price' },
+              beginAtZero: false
+            }
+          },
+          plugins: {
+            tooltip: {
+              mode: 'index',
+              intersect: false
+            }
           }
         }
       });
-
     } catch (error) {
       console.error('Error fetching data:', error);
       const tbody = document.querySelector('#priceTable tbody');
@@ -183,93 +570,79 @@
     }
   }
 
+  // Function to delete a record
+  async function deleteRecord(recordId) {
+    if (!confirm('Are you sure you want to delete this record?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/prices/${recordId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Show success message
+        showCustomAlert('Record deleted successfully');
+        // Refresh the data display
+        fetchData();
+      } else {
+        // Show error message
+        showCustomAlert(`Error: ${result.error || 'Failed to delete record'}`);
+      }
+    } catch (error) {
+      console.error('Error deleting record:', error);
+      showCustomAlert('Network error occurred while trying to delete record');
+    }
+  }
+
   function showCustomAlert(message) {
     // Remove existing alert if any
-    const oldAlert = document.getElementById('customAlertBox');
-    if (oldAlert) oldAlert.remove();
+    const existingAlert = document.querySelector('.custom-alert');
+    if (existingAlert) existingAlert.remove();
 
-    const alertBox = document.createElement('div');
-    alertBox.id = 'customAlertBox';
-    alertBox.textContent = message;
-    alertBox.style.position = 'fixed';
-    alertBox.style.top = '30px';
-    alertBox.style.left = '50%';
-    alertBox.style.transform = 'translateX(-50%)';
-    alertBox.style.background = '#e74c3c';
-    alertBox.style.color = 'white';
-    alertBox.style.padding = '16px 32px';
-    alertBox.style.borderRadius = '8px';
-    alertBox.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
-    alertBox.style.zIndex = '9999';
-    alertBox.style.fontWeight = 'bold';
-    document.body.appendChild(alertBox);
+    // Create alert div
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'custom-alert';
+    alertDiv.style.position = 'fixed';
+    alertDiv.style.top = '20px';
+    alertDiv.style.left = '50%';
+    alertDiv.style.transform = 'translateX(-50%)';
+    alertDiv.style.padding = '15px 25px';
+    alertDiv.style.backgroundColor = '#f8d7da';
+    alertDiv.style.border = '1px solid #f5c6cb';
+    alertDiv.style.borderRadius = '8px';
+    alertDiv.style.color = '#721c24';
+    alertDiv.style.zIndex = '1000';
+    alertDiv.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+    alertDiv.style.maxWidth = '80%';
+    alertDiv.style.textAlign = 'center';
+    alertDiv.textContent = message;
+
+    document.body.appendChild(alertDiv);
+
+    // Remove after 3 seconds
     setTimeout(() => {
-      alertBox.remove();
-    }, 2500);
+      alertDiv.remove();
+    }, 3000);
   }
+
+  document.getElementById('searchForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    fetchData();
+  });
 
   function updateEndDateMin() {
     const startDate = document.getElementById('startDate').value;
-    const endDateInput = document.getElementById('endDate');
-
     if (startDate) {
-      endDateInput.min = startDate;
-      // If end date is less than start date, clear it
-      if (endDateInput.value && endDateInput.value < startDate) {
-        endDateInput.value = '';
-        showCustomAlert('End Date cannot be smaller than Start Date');
-      }
-    } else {
-      endDateInput.min = '2010-07-10';
+      document.getElementById('endDate').min = startDate;
     }
   }
-
-  // Add date input event listeners for real-time validation
-  document.getElementById('startDate').addEventListener('change', function(e) {
-    const date = e.target.value;
-    if (date && (date < '2010-07-10' || date > '2014-03-31')) {
-      showCustomAlert('Start Date harus antara 10 Juli 2010 dan 31 Maret 2014');
-      e.target.value = '';
-    }
-    updateEndDateMin();
-  });
-
-  document.getElementById('endDate').addEventListener('change', function(e) {
-    const date = e.target.value;
-    const startDate = document.getElementById('startDate').value;
-
-    if (date && (date < '2010-07-10' || date > '2014-03-31')) {
-      showCustomAlert('End Date harus antara 10 Juli 2010 dan 31 Maret 2014');
-      e.target.value = '';
-      return;
-    }
-
-    if (date && startDate && date < startDate) {
-      showCustomAlert('End Date tidak boleh lebih kecil dari Start Date');
-      e.target.value = '';
-    }
-  });
-
-  // Add event listener for form submission
-  document.getElementById('searchForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const productName = document.getElementById('productName').value.trim();
-    const startDate = document.getElementById('startDate').value.trim();
-    const endDate = document.getElementById('endDate').value.trim();
-    const price = document.getElementById('price').value.trim();
-    const limit = document.getElementById('limit').value.trim();
-    if (limit && (!/^\d+$/.test(limit) || parseInt(limit) > 11061) || parseInt(limit) < 1) {
-      showCustomAlert('The minimum limit is 1 and the maximum limit is 11061 records. Please enter a valid number.');
-      return;
-    }
-
-
-    if (!productName && !startDate && !endDate && !price && !limit) {
-      showCustomAlert('Please enter at least one search criterion.');
-      return;
-    }
-    fetchData();
-  });
 </script>
 
 </body>
