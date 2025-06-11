@@ -5,7 +5,6 @@ var logger = require('morgan');
 const sqlite3 = require('sqlite3').verbose();
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 var authRouter = require('./routes/auth');
 var testRouter = require('./routes/test');
 
@@ -87,7 +86,6 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/', authRouter);  // Add auth router that handles /login
 app.use('/test', testRouter); // Add test router for /test endpoint
 

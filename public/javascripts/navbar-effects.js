@@ -87,17 +87,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // PERBAIKAN: Navbar toggle functionality - dibuat lebih robust
   const navbar = document.querySelector('.navbar');
-  if (!navbar) return; // Keluar jika navbar tidak ditemukan
+    if (!navbar) return;
 
-  // Hapus tombol toggle yang mungkin sudah ada untuk mencegah duplikasi
   const existingToggle = navbar.querySelector('.navbar-toggle');
   if (existingToggle) {
     existingToggle.remove();
   }
 
-  // Buat tombol toggle baru
   const navbarToggle = document.createElement('button');
   navbarToggle.type = "button"; // Pastikan ini adalah button HTML yang valid
   navbarToggle.innerHTML = '<i class="fas fa-bars"></i>';
@@ -105,26 +102,20 @@ document.addEventListener('DOMContentLoaded', function() {
   navbarToggle.setAttribute('aria-label', 'Toggle navigation');
   navbarToggle.setAttribute('aria-expanded', 'false');
 
-  // Tambahkan ke awal navbar
   navbar.insertBefore(navbarToggle, navbar.firstChild);
 
-  // Tambahkan event listener dengan event debugging
   navbarToggle.onclick = function(event) {
     // Debug
     console.log('Toggle button clicked');
 
-    // Mencegah event bubbling
     event.preventDefault();
     event.stopPropagation();
 
-    // Toggle navbar class
     navbar.classList.toggle('navbar-expanded');
 
-    // Perbarui aria-expanded untuk aksesibilitas
     const isExpanded = navbar.classList.contains('navbar-expanded');
     navbarToggle.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
 
-    // Ganti ikon berdasarkan state
     navbarToggle.innerHTML = isExpanded ?
       '<i class="fas fa-times"></i>' :
       '<i class="fas fa-bars"></i>';
@@ -132,7 +123,6 @@ document.addEventListener('DOMContentLoaded', function() {
     return false;
   };
 
-  // Tangani klik di luar navbar untuk menutup menu
   document.addEventListener('click', function(event) {
     // Hanya proses jika navbar expanded dan klik bukan pada navbar atau children-nya
     if (navbar.classList.contains('navbar-expanded') &&
@@ -144,7 +134,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Tutup menu navbar ketika link diklik
   const navbarLinks = navbar.querySelectorAll('.navbar-menu a');
   navbarLinks.forEach(link => {
     link.addEventListener('click', function() {

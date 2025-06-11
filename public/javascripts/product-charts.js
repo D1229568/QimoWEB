@@ -1,33 +1,24 @@
 document.addEventListener('DOMContentLoaded', function() {
-  // Tambahkan konfigurasi global untuk Chart.js
+
   Chart.defaults.font.family = "'Segoe UI', 'Arial', sans-serif";
   Chart.defaults.responsive = true;
   Chart.defaults.maintainAspectRatio = false;
   Chart.defaults.color = '#0c4a6e';
-
-  // Set warna tema biru muda untuk semua grafik
   Chart.defaults.borderColor = '#a5d8ff';
   Chart.defaults.backgroundColor = '#e7f5ff';
-
-  // Set tooltip styling
   Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(76, 154, 255, 0.8)';
   Chart.defaults.plugins.tooltip.titleColor = '#ffffff';
   Chart.defaults.plugins.tooltip.bodyColor = '#ffffff';
   Chart.defaults.plugins.tooltip.borderColor = '#74c0fc';
   Chart.defaults.plugins.tooltip.borderWidth = 1;
-
-  // Set legend styling
   Chart.defaults.plugins.legend.labels.color = '#0c4a6e';
-
-  // Menggunakan konfigurasi animasi sederhana
   Chart.defaults.animation.duration = 1000;
 
-  // Load data sekali saja untuk semua chart
   fetchProductData();
 
   // Set interval to check for updated data every minute (60000 ms)
   // This will ensure the charts are updated when data changes
-  setInterval(fetchProductData, 60000);
+
 });
 
 async function fetchProductData() {

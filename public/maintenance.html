@@ -31,7 +31,7 @@
 
   <div class="estimated-time">
     <i class="far fa-clock"></i>
-    <strong>Estimated completion time:</strong> 30 Juni 2025, 18:00 WIB
+    <strong>Estimated completion time:</strong> <span id="completion-date">Calculating...</span>
   </div>
 
   <div class="maintenance-info">
@@ -58,5 +58,23 @@
 </div>
 
 <script src="javascripts/navbar-effects.js"></script>
+<script>
+  // Function to calculate and display completion date (current date + 1 day)
+  document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    // Format the date to show day, month, year and time
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    };
+
+    // Set the formatted date to the span
+    document.getElementById('completion-date').textContent = tomorrow.toLocaleDateString('en-US', options);
+  });
+</script>
 </body>
 </html>
